@@ -87,7 +87,7 @@ def get_model() -> ChatOpenAI:
         openai_api_key=api_key,
         openai_api_base=MODEL_API_BASE,
         temperature=MODEL_TEMPERATURE,
-        max_tokens=8192,
+        max_tokens=2048,
     )
 
 
@@ -341,6 +341,11 @@ def prepare_workspace_node(state: AgentState) -> dict:
         main_dir.mkdir(parents=True, exist_ok=True)
         code_path = main_dir / "main.c"
         active_platform = "zephyr"
+    elif state.get("framework") == "STM32CubeHAL":
+        core_src_dir = output_dir / "Core" / "Src"
+        core_src_dir.mkdir(parents=True, exist_ok=True)
+        code_path = core_src_dir / "main.c"
+        active_platform = "stm32cubehal"
     else:
         raise NotImplementedError(state.get("framework"))
 
@@ -611,9 +616,15 @@ def _get_workspace(state: AgentState) -> WorkspaceInfo:
         run_dir = state.get("run_dir", "./output")
         output_root = str(Path(run_dir) / "output")
 
-    if target not in {"arduino", "esp-idf", "zephyr"}:
+    if target not in {"arduino", "esp-idf", "zephyr", "stm32cubehal"}:
         active_skills = state.get("active_skills", [])
-        target = "arduino" if "arduino" in active_skills else "esp-idf"
+        #target = "arduino" if "arduino" in active_skills else "esp-idf"
+        if "stm32f746" in active_skills:
+            target = "stm32cubehal"
+        elif "arduino" in active_skills:
+            target = "arduino"
+        else:
+            target = "esp-idf"
 
     return {
         "output_root": str(output_root),
@@ -641,6 +652,8 @@ def assemble_artifacts_node(state: AgentState) -> dict:
         code_rel_path = "main/main.c"
     elif target == "zephyr":
         code_rel_path = "src/main.c"
+    elif target == "stm32cubehal":
+        code_rel_path = "Core/Src/main.c"
         
     artifacts.append({
         "path": code_rel_path,

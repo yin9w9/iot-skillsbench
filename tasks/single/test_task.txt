@@ -1,0 +1,2 @@
+Randomly show a number from 0 to 9 on LCD screen, change number when bottom is pressed.
+Use GPIO 3 for the LCD and GPIO 2 for the button.

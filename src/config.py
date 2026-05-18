@@ -10,14 +10,15 @@ from typing import Optional, Literal
 import yaml
 
 # Valid options for board and framework
-BoardType = Literal["esp32_s3_box_3", "arduino_mega_2560", "arduino_nano_33_ble"]
-FrameworkType = Literal["ESP-IDF", "Arduino", "Zephyr"]
+BoardType = Literal["esp32_s3_box_3", "arduino_mega_2560", "arduino_nano_33_ble", "stm32f746"]
+FrameworkType = Literal["ESP-IDF", "Arduino", "Zephyr", "STM32CubeHAL"]
 
 def get_board_alias(board: BoardType):
     board_name_alias = {
         "esp32_s3_box_3": "ESP32-S3-BOX-3",
         "arduino_mega_2560": "Arduino Mega 2560 R3", 
         "arduino_nano_33_ble": "Arduino Nano 33 BLE",
+        "stm32f746": "STM32F746",
     }
     return board_name_alias[board]
 
