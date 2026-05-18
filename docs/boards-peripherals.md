@@ -5,7 +5,8 @@ We consider three platform-framework combinations, where each platform refers to
 
 - ATmega2560 (Arduino Mega 2560 Rev3) with the Arduino framework (Arduino CLI v1.4.1, Arduino Core arduino:avr v1.8.7);
 - ESP32-S3 (ESP32-S3-BOX-3) with ESP-IDF (v5.1.2);
-- nRF52840 (Arduino Nano 33 BLE Rev2) with Zephyr via nRF Connect SDK (v2.7.0).
+- nRF52840 (Arduino Nano 33 BLE Rev2) with Zephyr via nRF Connect SDK (v2.7.0);
+- TI MSP430 (msp430fr5994) LaunchPad with MSP430-GCC Makefile ramework.
 
 ## Tested Peripherals
 
@@ -36,3 +37,8 @@ Table: List of peripherals Tested by IoT-SkillsBench.
 | 21 | DS1307 RTC Module | I2C | Sensor |
 | 22 | MPU6050 / GY-521 | I2C | Sensor |
 | 23 | BME280 (Temp, Humidity, Pres.) | I2C / SPI | Sensor |
+| 24 | Onboard LED | GPIO Digital Out | Actuator |
+| 25 | Optional LCD control pin | GPIO Digital Out | Output control |
+| # | Peripheral | Interface | Category |
+|---|---|---|---|
+

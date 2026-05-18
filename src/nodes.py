@@ -87,7 +87,7 @@ def get_model() -> ChatOpenAI:
         openai_api_key=api_key,
         openai_api_base=MODEL_API_BASE,
         temperature=MODEL_TEMPERATURE,
-        max_tokens=2048,
+        max_tokens=512,
     )
 
 
@@ -297,9 +297,40 @@ def manager_node(state: AgentState) -> dict:
         )
 
         # Fallback: no hardcoded skills, only use what was loaded from config
-        fallback_skills = [
-            s for s in registry.descriptions
-        ]  # Use all available skills if any
+        # fallback_skills = [
+        #     s for s in registry.descriptions
+        # ]  # Use all available skills if any
+        req = state.get("requirements", "").lower()
+        framework = state.get("framework", "").lower()
+
+        fallback_skills = []
+
+        for skill_name in registry.descriptions:
+            skill_l = skill_name.lower()
+
+            if "msp430" in req or "msp430" in framework:
+                if "msp430" in skill_l:
+                    fallback_skills.append(skill_name)
+
+            elif "stm32" in req or "stm32" in framework:
+                if "stm32" in skill_l:
+                    fallback_skills.append(skill_name)
+
+            elif "esp-idf" in req or "esp-idf" in framework:
+                if "esp32" in skill_l or "esp-idf" in skill_l:
+                    fallback_skills.append(skill_name)
+
+            elif "zephyr" in req or "zephyr" in framework:
+                if "zephyr" in skill_l or "nrf" in skill_l:
+                    fallback_skills.append(skill_name)
+
+            elif "arduino" in req or "arduino" in framework:
+                if "arduino" in skill_l or "atmega" in skill_l:
+                    fallback_skills.append(skill_name)
+
+        if not fallback_skills and registry.descriptions:
+            fallback_skills = list(registry.descriptions.keys())[:1]
+
         fallback_content = registry.get_combined_skill_content(
             fallback_skills
         ) if fallback_skills else "Use standard embedded development best practices."
@@ -330,6 +361,10 @@ def prepare_workspace_node(state: AgentState) -> dict:
     # if "arduino" in active_skills:
         code_path = output_dir / "output.ino"
         active_platform = "arduino"
+    elif state.get("framework") == "MSP430-GCC":
+        code_path = output_dir / "main.c"
+        active_platform = "msp430-gcc"
+
     elif state.get("framework") == "ESP-IDF":
     # if "esp-idf" in active_skills:
         main_dir = output_dir / "main"
@@ -616,10 +651,12 @@ def _get_workspace(state: AgentState) -> WorkspaceInfo:
         run_dir = state.get("run_dir", "./output")
         output_root = str(Path(run_dir) / "output")
 
-    if target not in {"arduino", "esp-idf", "zephyr", "stm32cubehal"}:
+    if target not in {"arduino", "energia", "esp-idf", "zephyr", "stm32cubehal"}:
         active_skills = state.get("active_skills", [])
         #target = "arduino" if "arduino" in active_skills else "esp-idf"
-        if "stm32f746" in active_skills:
+        if "msp430-framework" in active_skills:
+            target = "msp430-gcc"
+        elif "stm32f746" in active_skills:
             target = "stm32cubehal"
         elif "arduino" in active_skills:
             target = "arduino"
@@ -648,6 +685,9 @@ def assemble_artifacts_node(state: AgentState) -> dict:
 
     if target == "arduino":
         code_rel_path = "output.ino"
+    elif target == "msp430-gcc":
+        code_rel_path = "main.c"
+    
     elif target == "esp-idf":
         code_rel_path = "main/main.c"
     elif target == "zephyr":
@@ -661,6 +701,7 @@ def assemble_artifacts_node(state: AgentState) -> dict:
         "role": "code",
     })
 
+    
     if target == "esp-idf":
         artifacts.append({
             "path": "CMakeLists.txt",
@@ -757,6 +798,29 @@ CONFIG_CBPRINTF_FP_SUPPORT=y
 '''),
             "role":"meta"
         })  
+
+    elif target == "msp430-gcc":
+        artifacts.append({
+            "path": "Makefile",
+            "content": (
+                "MCU ?= msp430fr5994\n"
+                "TARGET ?= main\n"
+                "CC ?= cl430\n"
+                "\n"
+                "CFLAGS = -vmspx --code_model=large --data_model=restricted --opt_level=2 --printf_support=minimal --diag_warning=225\n"
+                "LDFLAGS = --rom_model\n"
+                "\n"
+                "all: $(TARGET).out\n"
+                "\n"
+                "$(TARGET).out: main.c\n"
+                "\t$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $<\n"
+                "\n"
+                "clean:\n"
+                "\tdel /Q $(TARGET).out $(TARGET).map 2>NUL || exit 0\n"
+            ),
+            "role": "meta",
+        })
+            
     if diagram_content:
         artifacts.append({
             "path": "wiring/wokwi.json",

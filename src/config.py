@@ -10,8 +10,8 @@ from typing import Optional, Literal
 import yaml
 
 # Valid options for board and framework
-BoardType = Literal["esp32_s3_box_3", "arduino_mega_2560", "arduino_nano_33_ble", "stm32f746"]
-FrameworkType = Literal["ESP-IDF", "Arduino", "Zephyr", "STM32CubeHAL"]
+BoardType = Literal["esp32_s3_box_3", "arduino_mega_2560", "arduino_nano_33_ble", "stm32f746", "ti_msp430"]
+FrameworkType = Literal["ESP-IDF", "Arduino", "Zephyr", "STM32CubeHAL", "MSP430-GCC"]
 
 def get_board_alias(board: BoardType):
     board_name_alias = {
@@ -19,6 +19,7 @@ def get_board_alias(board: BoardType):
         "arduino_mega_2560": "Arduino Mega 2560 R3", 
         "arduino_nano_33_ble": "Arduino Nano 33 BLE",
         "stm32f746": "STM32F746",
+        "ti_msp430": "TI MSP430 LaunchPad",
     }
     return board_name_alias[board]
 
