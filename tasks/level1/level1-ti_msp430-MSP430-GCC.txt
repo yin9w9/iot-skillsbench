@@ -1,7 +1,8 @@
-[blink_led_1hz]
+[Blink_Onboard_LED]
 Blink the onboard LED at 1 Hz.
 Use GPIO 3 for the LCD.
 
-[blink_led_2hz]
+
+[Blink_Onboard_LED_2]
 Blink the onboard LED at 2 Hz.
 Use GPIO 3 for the LCD.

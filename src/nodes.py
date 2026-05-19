@@ -87,7 +87,7 @@ def get_model() -> ChatOpenAI:
         openai_api_key=api_key,
         openai_api_base=MODEL_API_BASE,
         temperature=MODEL_TEMPERATURE,
-        max_tokens=1024,  #>256
+        max_tokens=512,  #>256
     ) 
 
 

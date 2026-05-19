@@ -1,0 +1,27 @@
+---------- LLM generation ------------
+Read tasks from \iot-skillsbench\tasks\level1\level1-ti_msp430-MSP430-GCC.txt :
+
+[blink_led_1hz]
+Blink the onboard LED at 1 Hz.
+Use GPIO 3 for the LCD.
+
+[blink_led_2hz]
+Blink the onboard LED at 2 Hz.
+Use GPIO 3 for the LCD.
+
+
+
+please follow these
+steps:
+1. Analyze the task requirements and identify what domain knowledge, hardware platforms, or connectivity
+protocols, etc, are needed.
+2. Consider implementation based on three MCU + development framework combinations: TI MSP430fr5994 LaunchPad + msp430-gcc
+3. Write modular skill documents that would help solve these tasks. Each skill should: focus on a specific MCU,
+board, IoT tool, protocol, framework, or embedded technique; provide code examples and usage patterns; be reusable for similar tasks.
+
+
+-------------------build -> compile+run --------------------------------
+
+python scripts/auto_test_msp430.py -i tasks/level1/level1-ti_msp430-MSP430-GCC.txt -t Blink_Onboard_LED --mcu msp430fr5994 --build-only
+
+python scripts/auto_test_msp430.py -i tasks/level1/level1-ti_msp430-MSP430-GCC.txt -t Blink_Onboard_LED --mcu msp430fr5994 --debugger dslite --driver tilib
