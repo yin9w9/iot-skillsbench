@@ -1,8 +1,15 @@
-[Blink_Onboard_LED]
-Blink the onboard LED at 1 Hz.
-Use GPIO 3 for the LCD.
+[Blink_1Hz_LED]
+Blink the onboard LED2 at 1 Hz.
+Use pin p1.1 for the LED2.
 
+[Blink_4Hz_LED]
+Blink the onboard LED1 at 4 Hz.
+Use pin p1.0 for the LED1.
 
-[Blink_Onboard_LED_2]
-Blink the onboard LED at 2 Hz.
-Use GPIO 3 for the LCD.
+[Botton_to_LED]
+Read the state of a button (switch s2), and turn on LED1 when the button switch s2 is pressed. 
+Use GPIO p5.5 for the button and GPIO p1.0 for the LED1.
+
+[Blink_0.5Hz_LED]
+Blink the onboard LED1 at 0.5 Hz.
+Use GPIO p1.0 for the LED1.

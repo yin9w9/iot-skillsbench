@@ -1,0 +1,360 @@
+# docs/board-pinmaps/stm32f746g-disco.yaml
+# Predefined pin map for STM32F746G-DISCO / 32F746GDISCOVERY.
+# Source: ST UM1907 user manual, especially ARDUINO Uno V3 connector table and I/O assignment table.
+# Notes:
+# - The STM32 I/O voltage is 3.3 V, even though ARDUINO Uno shields may expect 5 V logic.
+# - The onboard LCD is NOT controlled by one GPIO. Use STM32F746G-DISCO BSP LCD/LTDC/FMC setup.
+# - Logical "GPIO 2" and "GPIO 3" in Arduino-style tasks map to ARDUINO D2 and D3.
+
+board:
+  id: stm32f746g_disco
+  order_code: STM32F746G-DISCO
+  board_reference: MB1191
+  marketing_name: 32F746GDISCOVERY
+  mcu: STM32F746NGH6
+  package: TFBGA216
+  logic_voltage: 3.3V
+  frameworks:
+    - STM32CubeHAL
+    - STM32CubeIDE
+  notes:
+    - "ARDUINO Uno V3-compatible expansion connectors are available, but STM32 I/Os are 3.3 V compatible."
+    - "For STM32CubeHAL code generation, use GPIO port/pin names, not Arduino numeric pin names."
+    - "The onboard LCD uses RGB LCD-TFT/LTDC plus framebuffer/SDRAM and BSP drivers; it is not a single GPIO peripheral."
+
+aliases:
+  GPIO0: { maps_to: ARDUINO_D0 }
+  GPIO1: { maps_to: ARDUINO_D1 }
+  GPIO2: { maps_to: ARDUINO_D2 }
+  GPIO3: { maps_to: ARDUINO_D3 }
+  GPIO4: { maps_to: ARDUINO_D4 }
+  GPIO5: { maps_to: ARDUINO_D5 }
+  GPIO6: { maps_to: ARDUINO_D6 }
+  GPIO7: { maps_to: ARDUINO_D7 }
+  GPIO8: { maps_to: ARDUINO_D8 }
+  GPIO9: { maps_to: ARDUINO_D9 }
+  GPIO10: { maps_to: ARDUINO_D10 }
+  GPIO11: { maps_to: ARDUINO_D11 }
+  GPIO12: { maps_to: ARDUINO_D12 }
+  GPIO13: { maps_to: ARDUINO_D13 }
+
+  LCD:
+    type: onboard_display
+    interface: BSP_LCD_LTDC
+    note: "Use BSP_LCD_Init(), BSP_LCD_Clear(), BSP_LCD_DisplayStringAt(), LTDC/FMC/SDRAM configuration. Do not map LCD to GPIO3."
+  LCD_CONTROL_OPTIONAL_GPIO3:
+    maps_to: ARDUINO_D3
+    note: "Only use this if a task explicitly means an external LCD enable/backlight/reset pin on Arduino D3. It does not control the onboard LCD."
+
+arduino_uno_v3_connectors:
+  digital:
+    ARDUINO_D0:
+      connector: CN4
+      connector_pin: 1
+      stm32_pin: PC7
+      port: GPIOC
+      pin: GPIO_PIN_7
+      hal_clock_enable: __HAL_RCC_GPIOC_CLK_ENABLE
+      default_function: USART6_RX
+      label: "ARDUINO RX/D0"
+    ARDUINO_D1:
+      connector: CN4
+      connector_pin: 2
+      stm32_pin: PC6
+      port: GPIOC
+      pin: GPIO_PIN_6
+      hal_clock_enable: __HAL_RCC_GPIOC_CLK_ENABLE
+      default_function: USART6_TX
+      label: "ARDUINO TX/D1"
+    ARDUINO_D2:
+      connector: CN4
+      connector_pin: 3
+      stm32_pin: PG6
+      port: GPIOG
+      pin: GPIO_PIN_6
+      hal_clock_enable: __HAL_RCC_GPIOG_CLK_ENABLE
+      default_function: GPIO
+      label: "ARDUINO D2"
+      benchmark_aliases: ["GPIO2", "button_gpio2"]
+    ARDUINO_D3:
+      connector: CN4
+      connector_pin: 4
+      stm32_pin: PB4
+      port: GPIOB
+      pin: GPIO_PIN_4
+      hal_clock_enable: __HAL_RCC_GPIOB_CLK_ENABLE
+      default_function: TIM3_CH1
+      label: "ARDUINO PWM/D3"
+      benchmark_aliases: ["GPIO3", "led_gpio3", "lcd_control_gpio3"]
+    ARDUINO_D4:
+      connector: CN4
+      connector_pin: 5
+      stm32_pin: PG7
+      port: GPIOG
+      pin: GPIO_PIN_7
+      hal_clock_enable: __HAL_RCC_GPIOG_CLK_ENABLE
+      default_function: GPIO
+      label: "ARDUINO D4"
+    ARDUINO_D5:
+      connector: CN4
+      connector_pin: 6
+      stm32_pin: PI0
+      port: GPIOI
+      pin: GPIO_PIN_0
+      hal_clock_enable: __HAL_RCC_GPIOI_CLK_ENABLE
+      default_function: SPI2_NSS
+      label: "ARDUINO PWM/CS/D5"
+    ARDUINO_D6:
+      connector: CN4
+      connector_pin: 7
+      stm32_pin: PH6
+      port: GPIOH
+      pin: GPIO_PIN_6
+      hal_clock_enable: __HAL_RCC_GPIOH_CLK_ENABLE
+      default_function: TIM12_CH1
+      label: "ARDUINO PWM/D6"
+    ARDUINO_D7:
+      connector: CN4
+      connector_pin: 8
+      stm32_pin: PI3
+      port: GPIOI
+      pin: GPIO_PIN_3
+      hal_clock_enable: __HAL_RCC_GPIOI_CLK_ENABLE
+      default_function: GPIO
+      label: "ARDUINO D7"
+    ARDUINO_D8:
+      connector: CN7
+      connector_pin: 1
+      stm32_pin: PI2
+      port: GPIOI
+      pin: GPIO_PIN_2
+      hal_clock_enable: __HAL_RCC_GPIOI_CLK_ENABLE
+      default_function: GPIO
+      label: "ARDUINO D8"
+    ARDUINO_D9:
+      connector: CN7
+      connector_pin: 2
+      stm32_pin: PA15
+      port: GPIOA
+      pin: GPIO_PIN_15
+      hal_clock_enable: __HAL_RCC_GPIOA_CLK_ENABLE
+      default_function: TIM2_CH1
+      label: "ARDUINO PWM/D9"
+    ARDUINO_D10:
+      connector: CN7
+      connector_pin: 3
+      stm32_pin: PA8
+      port: GPIOA
+      pin: GPIO_PIN_8
+      hal_clock_enable: __HAL_RCC_GPIOA_CLK_ENABLE
+      default_function: TIM1_CH1
+      label: "ARDUINO PWM/D10"
+    ARDUINO_D11:
+      connector: CN7
+      connector_pin: 4
+      stm32_pin: PB15
+      port: GPIOB
+      pin: GPIO_PIN_15
+      hal_clock_enable: __HAL_RCC_GPIOB_CLK_ENABLE
+      default_function: "TIM12_CH2 / SPI2_MOSI"
+      label: "ARDUINO PWM/MOSI/D11"
+    ARDUINO_D12:
+      connector: CN7
+      connector_pin: 5
+      stm32_pin: PB14
+      port: GPIOB
+      pin: GPIO_PIN_14
+      hal_clock_enable: __HAL_RCC_GPIOB_CLK_ENABLE
+      default_function: SPI2_MISO
+      label: "ARDUINO MISO/D12"
+    ARDUINO_D13:
+      connector: CN7
+      connector_pin: 6
+      stm32_pin: PI1
+      port: GPIOI
+      pin: GPIO_PIN_1
+      hal_clock_enable: __HAL_RCC_GPIOI_CLK_ENABLE
+      default_function: SPI2_SCK
+      label: "ARDUINO SCK/D13"
+    ARDUINO_D14:
+      connector: CN7
+      connector_pin: 9
+      stm32_pin: PB9
+      port: GPIOB
+      pin: GPIO_PIN_9
+      hal_clock_enable: __HAL_RCC_GPIOB_CLK_ENABLE
+      default_function: I2C1_SDA
+      label: "ARDUINO SDA/D14"
+    ARDUINO_D15:
+      connector: CN7
+      connector_pin: 10
+      stm32_pin: PB8
+      port: GPIOB
+      pin: GPIO_PIN_8
+      hal_clock_enable: __HAL_RCC_GPIOB_CLK_ENABLE
+      default_function: I2C1_SCL
+      label: "ARDUINO SCL/D15"
+
+  analog:
+    ARDUINO_A0:
+      connector: CN5
+      connector_pin: 1
+      stm32_pin: PA0
+      port: GPIOA
+      pin: GPIO_PIN_0
+      hal_clock_enable: __HAL_RCC_GPIOA_CLK_ENABLE
+      default_function: ADC3_IN0
+      label: "ARDUINO A0"
+    ARDUINO_A1:
+      connector: CN5
+      connector_pin: 2
+      stm32_pin: PF10
+      port: GPIOF
+      pin: GPIO_PIN_10
+      hal_clock_enable: __HAL_RCC_GPIOF_CLK_ENABLE
+      default_function: ADC3_IN8
+      label: "ARDUINO A1"
+    ARDUINO_A2:
+      connector: CN5
+      connector_pin: 3
+      stm32_pin: PF9
+      port: GPIOF
+      pin: GPIO_PIN_9
+      hal_clock_enable: __HAL_RCC_GPIOF_CLK_ENABLE
+      default_function: ADC3_IN7
+      label: "ARDUINO A2"
+    ARDUINO_A3:
+      connector: CN5
+      connector_pin: 4
+      stm32_pin: PF8
+      port: GPIOF
+      pin: GPIO_PIN_8
+      hal_clock_enable: __HAL_RCC_GPIOF_CLK_ENABLE
+      default_function: ADC3_IN6
+      label: "ARDUINO A3"
+    ARDUINO_A4:
+      connector: CN5
+      connector_pin: 5
+      primary_stm32_pin: PF7
+      primary:
+        port: GPIOF
+        pin: GPIO_PIN_7
+        hal_clock_enable: __HAL_RCC_GPIOF_CLK_ENABLE
+        function: ADC3_IN5
+      alternate:
+        stm32_pin: PB9
+        port: GPIOB
+        pin: GPIO_PIN_9
+        hal_clock_enable: __HAL_RCC_GPIOB_CLK_ENABLE
+        function: I2C1_SDA
+      label: "ARDUINO A4"
+    ARDUINO_A5:
+      connector: CN5
+      connector_pin: 6
+      primary_stm32_pin: PF6
+      primary:
+        port: GPIOF
+        pin: GPIO_PIN_6
+        hal_clock_enable: __HAL_RCC_GPIOF_CLK_ENABLE
+        function: ADC3_IN4
+      alternate:
+        stm32_pin: PB8
+        port: GPIOB
+        pin: GPIO_PIN_8
+        hal_clock_enable: __HAL_RCC_GPIOB_CLK_ENABLE
+        function: I2C1_SCL
+      label: "ARDUINO A5"
+
+  power:
+    CN6_1: { pin_name: NC, function: NC }
+    CN6_2: { pin_name: IOREF, function: "3.3V reference" }
+    CN6_3: { pin_name: RESET, stm32_pin: NRST, function: reset }
+    CN6_4: { pin_name: "+3V3", function: "3.3V input/output" }
+    CN6_5: { pin_name: "+5V", function: "5V output" }
+    CN6_6: { pin_name: GND, function: ground }
+    CN6_7: { pin_name: GND, function: ground }
+    CN6_8: { pin_name: VIN, function: "power input" }
+
+onboard_peripherals:
+  lcd_tft:
+    type: "4.3 inch RGB 480x272 LCD-TFT with capacitive touchscreen"
+    recommended_api: BSP_LCD
+    interface: LTDC_RGB
+    framebuffer_default_address: "0xC0000000"
+    control_signals:
+      LCD_BL_CTRL:
+        stm32_pin: PK3
+        port: GPIOK
+        pin: GPIO_PIN_3
+        hal_clock_enable: __HAL_RCC_GPIOK_CLK_ENABLE
+        default_state: GPIO_PIN_SET
+      LCD_DISP:
+        stm32_pin: PI12
+        port: GPIOI
+        pin: GPIO_PIN_12
+        hal_clock_enable: __HAL_RCC_GPIOI_CLK_ENABLE
+        default_state: GPIO_PIN_SET
+      LCD_INT:
+        stm32_pin: PI13
+        port: GPIOI
+        pin: GPIO_PIN_13
+        hal_clock_enable: __HAL_RCC_GPIOI_CLK_ENABLE
+        direction: input
+    generation_rule: "For onboard LCD display tasks, use BSP_LCD/LTDC/FMC template; never treat GPIO3/D3 as the LCD data interface."
+
+  user_button:
+    label: B_USER
+    stm32_pin: PI11
+    port: GPIOI
+    pin: GPIO_PIN_11
+    hal_clock_enable: __HAL_RCC_GPIOI_CLK_ENABLE
+    note: "Onboard user push-button. Verify active level in Cube example/schematic before generating logic."
+
+  reset_button:
+    label: B_RESET
+    stm32_pin: NRST
+    note: "Hardware reset button; not available as normal GPIO input."
+
+  stlink:
+    type: ST-LINK/V2-1
+    usb_connector: CN14
+    capabilities: [debug, programming, virtual_com_port, mass_storage]
+
+  i2c_extension_cn2:
+    pins:
+      CN2_1:
+        signal: I2C_SDA
+        stm32_pin: PB9
+        port: GPIOB
+        pin: GPIO_PIN_9
+      CN2_3:
+        signal: I2C_SCL
+        stm32_pin: PB8
+        port: GPIOB
+        pin: GPIO_PIN_8
+      CN2_4:
+        signal: RESET
+        stm32_pin: PC10
+        port: GPIOC
+        pin: GPIO_PIN_10
+      CN2_5:
+        signal: "+3V3"
+      CN2_7:
+        signal: GND
+
+code_generation_rules:
+  gpio_output_template:
+    clock_enable: "{hal_clock_enable}();"
+    init_mode: GPIO_MODE_OUTPUT_PP
+    pull: GPIO_NOPULL
+    speed: GPIO_SPEED_FREQ_LOW
+  gpio_input_template:
+    clock_enable: "{hal_clock_enable}();"
+    init_mode: GPIO_MODE_INPUT
+    pull_options: [GPIO_NOPULL, GPIO_PULLUP, GPIO_PULLDOWN]
+  benchmark_rules:
+    - "If task says GPIO 3, resolve to ARDUINO_D3 = PB4 / GPIOB / GPIO_PIN_4."
+    - "If task says GPIO 2, resolve to ARDUINO_D2 = PG6 / GPIOG / GPIO_PIN_6."
+    - "If task says LCD screen, use onboard_peripherals.lcd_tft and BSP_LCD APIs."
+    - "If task says use GPIO 3 for LCD, treat GPIO3 as optional external LCD control, not the onboard LCD interface."
+    - "For STM32CubeHAL projects, prefer generating code inside CubeMX USER CODE sections rather than replacing the entire Cube-generated main.c."
